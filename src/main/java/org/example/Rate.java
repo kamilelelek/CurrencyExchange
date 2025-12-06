@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example;
 
 public class Rate {
     private String currency;

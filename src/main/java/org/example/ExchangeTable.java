@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ public class ExchangeTable {
     private String table;
     private String no;
     private String effectiveDate;
-    private List<org.example.model.Rate> rates;
+    private List<org.example.Rate> rates;
 
     public String getTable() {
         return table;
@@ -20,7 +20,7 @@ public class ExchangeTable {
         return effectiveDate;
     }
 
-    public List<org.example.model.Rate> getRates() {
+    public List<org.example.Rate> getRates() {
         return rates;
     }
 }

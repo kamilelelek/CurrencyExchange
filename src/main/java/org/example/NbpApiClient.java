@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.model.ExchangeTable;
+import org.example.ExchangeTable;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -23,7 +23,7 @@ public class NbpApiClient {
         this.gson = new Gson();
     }
 
-    public List<ExchangeTable> getExchangeRates() throws Exception {
+    public  List<ExchangeTable> getExchangeRates() throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(NBP_URL))
