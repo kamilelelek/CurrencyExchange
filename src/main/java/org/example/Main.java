@@ -1,6 +1,10 @@
 package org.example;
 
+import java.util.List;
 import java.util.Scanner;
+
+import static org.example.Currency.PLN;
+import static org.example.Currency.USD;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -30,17 +34,19 @@ w przypadku wystapienia TreasureDepartmentException wiecej niz 10 razy, zablokuj
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Currencies are:");
+       System.out.println("Currencies are:");
         for (Currency currency : Currency.values()) {
             System.out.println(currency);
         }
         Scanner input = new Scanner(System.in);
         System.out.print("Enter currency code: ");
         String code = input.nextLine();
-
+        Currency from=PLN,to=USD;
+        double amount=200;
     }
 
-    public static double exchange(Currency from, Currency to, double amount) {
+    private static double exchange(Currency from, Currency to, double amount) {
+        int errors = 0;
         if (from == to) {
             throw new InvalidTransactionException("Exchange from " + from + " to " + to);
         }
@@ -49,12 +55,19 @@ public class Main {
         }
         if (amount > from.getLimit()) {
             throw new TreasureDepartmentMonitoringException("Amount cannot be greater than " + from.getLimit());
+            errors=+1;
+            if(errors>10) {
+                throw new UnsupportedOperationException("Currency exchange not supported");
+            }
         }
-
+        double refund;
+        System.out.println(amount + " " + from + " to " + to);
         // from = PLN, to DOLAR
         // double = api.getExchange(from, to) -> 1 PLN - 3,67 Dollara
         // amout * double
+        NbpApiClient client = new NbpApiClient();
+        double rate;
 
-        return 1.0;
+        return amount;
     }
 }
