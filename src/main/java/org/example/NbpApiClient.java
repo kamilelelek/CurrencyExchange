@@ -1,7 +1,5 @@
 package org.example;
 
-import org.example.ExchangeTable;
-
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -23,7 +21,8 @@ public class NbpApiClient {
         this.gson = new Gson();
     }
 
-    public  List<ExchangeTable> getExchangeRates() throws Exception {
+    // DO EDYTOWANIA - brakuje danych wejściwocyhc do funkcji
+    public  List<ExchangeTable> getExchangeTable() throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(NBP_URL))
@@ -39,5 +38,9 @@ public class NbpApiClient {
 
         Type listType = new TypeToken<List<ExchangeTable>>() {}.getType();
         return gson.fromJson(response.body(), listType);
+    }
+
+    public void getExchangeRate(String from, String to) {
+
     }
 }

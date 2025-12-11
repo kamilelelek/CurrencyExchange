@@ -1,6 +1,5 @@
 package org.example;
 
-import java.util.List;
 import java.util.Scanner;
 
 import static org.example.Currency.PLN;
@@ -55,7 +54,6 @@ public class Main {
         }
         if (amount > from.getLimit()) {
             throw new TreasureDepartmentMonitoringException("Amount cannot be greater than " + from.getLimit());
-            errors=+1;
             if(errors>10) {
                 throw new UnsupportedOperationException("Currency exchange not supported");
             }
@@ -63,7 +61,8 @@ public class Main {
         double refund;
         System.out.println(amount + " " + from + " to " + to);
         // from = PLN, to DOLAR
-        // double = api.getExchange(from, to) -> 1 PLN - 3,67 Dollara
+        NbpApiClient nbpApiClient = new NbpApiClient();
+         nbpApiClient.getExchangeTable(from, to);
         // amout * double
         NbpApiClient client = new NbpApiClient();
         double rate;
