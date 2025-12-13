@@ -32,19 +32,27 @@ w przypadku wystapienia TreasureDepartmentException wiecej niz 10 razy, zablokuj
  */
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
        System.out.println("Currencies are:");
-        for (Currency currency : Currency.values()) {
-            System.out.println(currency);
-        }
-        Scanner input = new Scanner(System.in);
-        System.out.print("Enter currency code: ");
-        String code = input.nextLine();
-        Currency from=PLN,to=USD;
-        double amount=200;
+       for (Currency currency : Currency.values()) {
+           System.out.println(currency);
+       }
+       Scanner input = new Scanner(System.in);
+       System.out.print("Enter currency code: ");
+       String fromCod = input.nextLine();
+       System.out.println(fromCod);
+       String toCod = input.nextLine();
+        System.out.println(toCod);
+        System.out.println("give amount");
+        double amount=input.nextDouble();
+        System.out.println(fromCod+" "+toCod+" "+amount);
+        String to =Currency.valueOf(toCod.toUpperCase()).toString();
+        String from =Currency.valueOf(fromCod.toUpperCase()).toString();
+        System.out.println(to);
     }
 
-    private static double exchange(Currency from, Currency to, double amount) {
+
+    private static double exchange(Currency from, Currency to, double amount) throws Exception {
         int errors = 0;
         if (from == to) {
             throw new InvalidTransactionException("Exchange from " + from + " to " + to);
@@ -54,15 +62,15 @@ public class Main {
         }
         if (amount > from.getLimit()) {
             throw new TreasureDepartmentMonitoringException("Amount cannot be greater than " + from.getLimit());
-            if(errors>10) {
-                throw new UnsupportedOperationException("Currency exchange not supported");
-            }
+            //if(errors>10) {
+              //  throw new UnsupportedOperationException("Currency exchange not supported");
+            //}
         }
         double refund;
         System.out.println(amount + " " + from + " to " + to);
         // from = PLN, to DOLAR
         NbpApiClient nbpApiClient = new NbpApiClient();
-         nbpApiClient.getExchangeTable(from, to);
+         nbpApiClient.getExchangeTable();
         // amout * double
         NbpApiClient client = new NbpApiClient();
         double rate;

@@ -20,4 +20,5 @@ public enum Currency {
     public int getLimit() {
         return limit;
     }
+
 }

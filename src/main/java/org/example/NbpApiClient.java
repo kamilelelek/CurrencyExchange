@@ -41,6 +41,7 @@ public class NbpApiClient {
     }
 
     public void getExchangeRate(String from, String to) {
+        final String NBP_URL = "https://api.nbp.pl/api/exchangerates/rates/{table}/{from}";
 
     }
 }
