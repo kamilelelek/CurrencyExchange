@@ -2,9 +2,6 @@ package org.example;
 
 import java.util.Scanner;
 
-import static org.example.Currency.PLN;
-import static org.example.Currency.USD;
-
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
@@ -31,28 +28,31 @@ w przypadku wystapienia TreasureDepartmentException wiecej niz 10 razy, zablokuj
 
  */
 
-public class Main {
-    public static void main(String[] args) throws Exception {
-       System.out.println("Currencies are:");
-       for (Currency currency : Currency.values()) {
-           System.out.println(currency);
-       }
-       Scanner input = new Scanner(System.in);
-       System.out.print("Enter currency code: ");
-       String fromCod = input.nextLine();
-       System.out.println(fromCod);
-       String toCod = input.nextLine();
+public class ExchageService {
+    public static void main(String[] args) {
+        System.out.println("Currencies are:");
+        for (Currency currency : Currency.values()) {
+            System.out.println(currency);
+        }
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter currency code: ");
+        String fromCod = input.nextLine();
+        System.out.println(fromCod);
+        String toCod = input.nextLine();
         System.out.println(toCod);
         System.out.println("give amount");
         double amount=input.nextDouble();
         System.out.println(fromCod+" "+toCod+" "+amount);
-        String to =Currency.valueOf(toCod.toUpperCase()).toString();
-        String from =Currency.valueOf(fromCod.toUpperCase()).toString();
+        Currency to = Currency.valueOf(toCod.toUpperCase());
+        Currency from = Currency.valueOf(fromCod.toUpperCase());
         System.out.println(to);
+
+        double exchange = exchange(from, to, amount);
+        // LOGGER Java LOG.info("") / LOG.error("")
+        System.out.println(exchange);
     }
 
-
-    private static double exchange(Currency from, Currency to, double amount) throws Exception {
+    private static double exchange(Currency from, Currency to, double amount) {
         int errors = 0;
         if (from == to) {
             throw new InvalidTransactionException("Exchange from " + from + " to " + to);
@@ -62,19 +62,15 @@ public class Main {
         }
         if (amount > from.getLimit()) {
             throw new TreasureDepartmentMonitoringException("Amount cannot be greater than " + from.getLimit());
-            //if(errors>10) {
-              //  throw new UnsupportedOperationException("Currency exchange not supported");
-            //}
+
         }
         double refund;
         System.out.println(amount + " " + from + " to " + to);
         // from = PLN, to DOLAR
         NbpApiClient nbpApiClient = new NbpApiClient();
-         nbpApiClient.getExchangeTable();
-        // amout * double
-        NbpApiClient client = new NbpApiClient();
-        double rate;
 
-        return amount;
+        //double exchangeRate = nbpApiClient.getExchangeRate(fromCod, toCod);
+
+        return exchangeRate;
     }
 }
