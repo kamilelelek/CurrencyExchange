@@ -44,38 +44,39 @@ public class NbpApiClient {
         return gson.fromJson(response.body(), listType);
     }
 
-    public double getExchangeRate(String fromCod, String toCod) {
-            try {
-                String urlString = "https://api.exchangerate-api.com/v4/latest/" + fromCod;
-                URL url = new URL(urlString);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
+    public double getExchangeRate(Currency from, Currency to) {
+        double exchangeRate = 0;
+        try {
+            String urlString = "https://api.exchangerate-api.com/v4/latest/" + from;
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-                //parser tu nizej
-                String jsonResponse = response.toString();
-                // odpowiedz typu  "AED":3.6725,
-                int startIndex = jsonResponse.indexOf(toCod);
-
-                int endIndex = jsonResponse.indexOf(",", startIndex);
-                if (endIndex == -1) {
-                    endIndex = jsonResponse.indexOf("}", startIndex);
-                }
-
-                String exchangeRateString = jsonResponse.substring(startIndex + 5, endIndex);
-                double exchangeRate = Double.parseDouble(exchangeRateString);
-                System.out.println("Kurs wymiany " + fromCod + " na " + toCod + ": " + exchangeRate);
-                return exchangeRate;
-
-            } catch (Exception e) {
-                System.out.println("Błąd podczas pobierania kursu wymiany: " + e.getMessage());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
             }
+            reader.close();
+            //parser tu nizej
+            String jsonResponse = response.toString();
+            // odpowiedz typu  "AED":3.6725,
+            int startIndex = jsonResponse.indexOf(String.valueOf(to));
+
+            int endIndex = jsonResponse.indexOf(",", startIndex);
+            if (endIndex == -1) {
+                endIndex = jsonResponse.indexOf("}", startIndex);
+            }
+
+            String exchangeRateString = jsonResponse.substring(startIndex + 5, endIndex);
+            exchangeRate = Double.parseDouble(exchangeRateString);
+            System.out.println("Kurs wymiany " + from + " na " + to + ": " + exchangeRate);
+
+        } catch (Exception e) {
+            System.out.println("Błąd podczas pobierania kursu wymiany: " + e.getMessage());
         }
+        return exchangeRate;
+    }
 
     }

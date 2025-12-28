@@ -1,5 +1,9 @@
 package org.example;
 
+import org.apache.commons.logging.Log;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -30,30 +34,27 @@ w przypadku wystapienia TreasureDepartmentException wiecej niz 10 razy, zablokuj
 
 public class ExchageService {
     public static void main(String[] args) {
-        System.out.println("Currencies are:");
+        Logger logger = Logger.getLogger(ExchageService.class.getName());
+        logger.info("Uruchomiono aplikację");
+        logger.info("Currencies are:");
         for (Currency currency : Currency.values()) {
             System.out.println(currency);
         }
         Scanner input = new Scanner(System.in);
-        System.out.print("Enter currency code: ");
+        logger.info("Podaj walute zrodlowa");
         String fromCod = input.nextLine();
-        System.out.println(fromCod);
+        logger.info("Podaj walute na ktora chcesz wymienic");
         String toCod = input.nextLine();
-        System.out.println(toCod);
         System.out.println("give amount");
         double amount=input.nextDouble();
-        System.out.println(fromCod+" "+toCod+" "+amount);
         Currency to = Currency.valueOf(toCod.toUpperCase());
         Currency from = Currency.valueOf(fromCod.toUpperCase());
-        System.out.println(to);
-
-        double exchange = exchange(from, to, amount);
         // LOGGER Java LOG.info("") / LOG.error("")
-        System.out.println(exchange);
+        System.out.println(exchange(from, to, amount));
     }
 
     private static double exchange(Currency from, Currency to, double amount) {
-        int errors = 0;
+        int errors;
         if (from == to) {
             throw new InvalidTransactionException("Exchange from " + from + " to " + to);
         }
@@ -65,12 +66,9 @@ public class ExchageService {
 
         }
         double refund;
-        System.out.println(amount + " " + from + " to " + to);
-        // from = PLN, to DOLAR
         NbpApiClient nbpApiClient = new NbpApiClient();
-
-        //double exchangeRate = nbpApiClient.getExchangeRate(fromCod, toCod);
-
-        return exchangeRate;
+        double exchangeRate = nbpApiClient.getExchangeRate(from, to);
+        refund = amount * exchangeRate;
+        return refund;
     }
 }
