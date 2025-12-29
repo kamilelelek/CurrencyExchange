@@ -1,10 +1,10 @@
 package org.example;
 
-import java.util.List;
-import java.util.Scanner;
+import org.apache.commons.logging.Log;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
-import static org.example.Currency.PLN;
-import static org.example.Currency.USD;
+import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -32,21 +32,29 @@ w przypadku wystapienia TreasureDepartmentException wiecej niz 10 razy, zablokuj
 
  */
 
-public class Main {
+public class ExchageService {
     public static void main(String[] args) {
-       System.out.println("Currencies are:");
+        Logger logger = Logger.getLogger(ExchageService.class.getName());
+        logger.info("Uruchomiono aplikację");
+        logger.info("Currencies are:");
         for (Currency currency : Currency.values()) {
             System.out.println(currency);
         }
         Scanner input = new Scanner(System.in);
-        System.out.print("Enter currency code: ");
-        String code = input.nextLine();
-        Currency from=PLN,to=USD;
-        double amount=200;
+        logger.info("Podaj walute zrodlowa");
+        String fromCod = input.nextLine();
+        logger.info("Podaj walute na ktora chcesz wymienic");
+        String toCod = input.nextLine();
+        System.out.println("give amount");
+        double amount=input.nextDouble();
+        Currency to = Currency.valueOf(toCod.toUpperCase());
+        Currency from = Currency.valueOf(fromCod.toUpperCase());
+        // LOGGER Java LOG.info("") / LOG.error("")
+        System.out.println(exchange(from, to, amount));
     }
 
     private static double exchange(Currency from, Currency to, double amount) {
-        int errors = 0;
+        int errors;
         if (from == to) {
             throw new InvalidTransactionException("Exchange from " + from + " to " + to);
         }
@@ -55,19 +63,12 @@ public class Main {
         }
         if (amount > from.getLimit()) {
             throw new TreasureDepartmentMonitoringException("Amount cannot be greater than " + from.getLimit());
-            errors=+1;
-            if(errors>10) {
-                throw new UnsupportedOperationException("Currency exchange not supported");
-            }
+
         }
         double refund;
-        System.out.println(amount + " " + from + " to " + to);
-        // from = PLN, to DOLAR
-        // double = api.getExchange(from, to) -> 1 PLN - 3,67 Dollara
-        // amout * double
-        NbpApiClient client = new NbpApiClient();
-        double rate;
-
-        return amount;
+        NbpApiClient nbpApiClient = new NbpApiClient();
+        double exchangeRate = nbpApiClient.getExchangeRate(from, to);
+        refund = amount * exchangeRate;
+        return refund;
     }
 }
